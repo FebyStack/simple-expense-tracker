@@ -12,7 +12,7 @@ try {
     $pdo = Database::connect();
     $stmt = $pdo->query(
         'SELECT id, title, category, amount, date, description
-         FROM expenses
+         FROM exptrack.expenses
          ORDER BY date DESC, id DESC'
     );
 

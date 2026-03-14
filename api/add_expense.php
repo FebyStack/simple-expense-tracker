@@ -21,7 +21,7 @@ if ($title === '' || $amount <= 0 || $date === '') {
 try {
     $pdo = Database::connect();
     $stmt = $pdo->prepare(
-        'INSERT INTO expenses (title, category, amount, date, description)
+        'INSERT INTO exptrack.expenses (title, category, amount, date, description)
          VALUES (:title, :category, :amount, :date, :description)
          RETURNING id'
     );
