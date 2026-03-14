@@ -1,48 +1,65 @@
 <?php
 
-class Database {
+declare(strict_types=1);
+
+class Database
+{
     private static ?PDO $instance = null;
 
-    private static array $config = [
-        'host' => 'localhost',
-        'port' => '5432',
-        'dbname' => 'Expense-Tracker',
-        'user' => 'postgres',
-        'password' => 'bingbong321',
-    ];
-
-    public static function connect(): PDO {
-
-        if (self::$instance === null) {
-
-            try {
-
-                $dsn = sprintf(
-                    'pgsql:host=%s;port=%s;dbname=%s',
-                    self::$config['host'],
-                    self::$config['port'],
-                    self::$config['dbname']
-                );
-
-                self::$instance = new PDO(
-                    $dsn,
-                    self::$config['user'],
-                    self::$config['password'],
-                    [
-                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                        PDO::ATTR_EMULATE_PREPARES => false,
-                    ]
-                );
-
-                self::$instance->exec("SET search_path TO exptrack, public");
-
-            } catch (PDOException $e) {
-                die("Database connection failed: " . $e->getMessage());
-            }
-
+    public static function connect(): PDO
+    {
+        if (self::$instance instanceof PDO) {
+            return self::$instance;
         }
+
+        $host = getenv('DB_HOST') ?: 'localhost';
+        $port = getenv('DB_PORT') ?: '5432';
+        $dbname = getenv('DB_NAME') ?: 'postgres';
+        $user = getenv('DB_USER') ?: 'postgres';
+        $password = getenv('DB_PASSWORD') ?: 'bingbong321';
+
+        $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s', $host, $port, $dbname);
+
+        self::$instance = new PDO($dsn, $user, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]);
+
+        $schema = self::schema();
+        self::$instance->exec(sprintf('CREATE SCHEMA IF NOT EXISTS "%s"', $schema));
+        self::$instance->exec(sprintf('SET search_path TO "%s", public', $schema));
+        self::$instance->exec(
+            'CREATE TABLE IF NOT EXISTS expenses (
+                id BIGSERIAL PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                category VARCHAR(150) DEFAULT \'\',
+                amount NUMERIC(12,2) NOT NULL,
+                "date" DATE NOT NULL,
+                description TEXT DEFAULT \'\',
+                created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+            )'
+        );
 
         return self::$instance;
     }
+
+    public static function schema(): string
+    {
+        $schema = getenv('DB_SCHEMA') ?: 'exptrack';
+
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $schema)) {
+            return 'exptrack';
+        }
+
+        return $schema;
+    }
+}
+
+function jsonResponse(array $data, int $statusCode = 200): void
+{
+    http_response_code($statusCode);
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit;
 }
