@@ -56,7 +56,7 @@ class Database
             )'
         );
 
-        return self::$instance;
+        return $schema;
     }
 }
 
