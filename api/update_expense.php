@@ -22,11 +22,11 @@ if ($id <= 0 || $title === '' || $amount <= 0 || $date === '') {
 try {
     $pdo = Database::connect();
     $stmt = $pdo->prepare(
-        'UPDATE expenses
+        'UPDATE exptrack.expenses
          SET title = :title,
              category = :category,
              amount = :amount,
-             "date" = :date,
+             date = :date,
              description = :description
          WHERE id = :id'
     );

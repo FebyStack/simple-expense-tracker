@@ -11,9 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
     $pdo = Database::connect();
     $stmt = $pdo->query(
-        'SELECT id, title, category, amount, "date" AS date, description
-         FROM expenses
-         ORDER BY "date" DESC, id DESC'
+        'SELECT id, title, category, amount, date, description
+         FROM exptrack.expenses
+         ORDER BY date DESC, id DESC'
     );
 
     $expenses = $stmt->fetchAll();

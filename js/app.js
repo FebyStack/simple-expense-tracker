@@ -1,17 +1,9 @@
 async function requestJson(url, options = {}) {
     const response = await fetch(url, options);
-    const raw = await response.text();
-
-    let data = {};
-    try {
-        data = raw ? JSON.parse(raw) : {};
-    } catch (error) {
-        data = { error: raw || 'Invalid JSON response from server.' };
-    }
+    const data = await response.json();
 
     if (!response.ok) {
-        const message = [data.error, data.details, data.hint].filter(Boolean).join(' ');
-        throw new Error(message || `Request failed (${response.status})`);
+        throw new Error(data.error || 'Request failed');
     }
 
     return data;

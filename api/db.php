@@ -14,7 +14,23 @@ class Database
 
         $host = getenv('DB_HOST') ?: 'localhost';
         $port = getenv('DB_PORT') ?: '5432';
-        $dbname = getenv('DB_NAME') ?: 'postgres';
+        $dbname = getenv('DB_NAME') ?: 'Expense-Tracker';
+        $user = getenv('DB_USER') ?: 'postgres';
+        $password = getenv('DB_PASSWORD') ?: 'postgres';
+
+        $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s', $host, $port, $dbname);
+
+        self::$instance = new PDO($dsn, $user, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]);
+
+        self::$instance->exec('SET search_path TO exptrack, public');
+
+        $host = getenv('DB_HOST') ?: 'localhost';
+        $port = getenv('DB_PORT') ?: '5432';
+        $dbname = getenv('DB_NAME') ?: 'Expense-Tracker';
         $user = getenv('DB_USER') ?: 'postgres';
         $password = getenv('DB_PASSWORD') ?: 'bingbong321';
 
@@ -26,11 +42,10 @@ class Database
             PDO::ATTR_EMULATE_PREPARES => false,
         ]);
 
-        $schema = self::schema();
-        self::$instance->exec(sprintf('CREATE SCHEMA IF NOT EXISTS "%s"', $schema));
-        self::$instance->exec(sprintf('SET search_path TO "%s", public', $schema));
+        self::$instance->exec('CREATE SCHEMA IF NOT EXISTS exptrack');
+        self::$instance->exec('SET search_path TO exptrack, public');
         self::$instance->exec(
-            'CREATE TABLE IF NOT EXISTS expenses (
+            'CREATE TABLE IF NOT EXISTS exptrack.expenses (
                 id BIGSERIAL PRIMARY KEY,
                 title VARCHAR(255) NOT NULL,
                 category VARCHAR(150) DEFAULT \'\',
@@ -40,17 +55,6 @@ class Database
                 created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
             )'
         );
-
-        return self::$instance;
-    }
-
-    public static function schema(): string
-    {
-        $schema = getenv('DB_SCHEMA') ?: 'exptrack';
-
-        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $schema)) {
-            return 'exptrack';
-        }
 
         return $schema;
     }

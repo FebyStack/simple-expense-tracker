@@ -21,7 +21,7 @@ if ($title === '' || $amount <= 0 || $date === '') {
 try {
     $pdo = Database::connect();
     $stmt = $pdo->prepare(
-        'INSERT INTO expenses (title, category, amount, "date", description)
+        'INSERT INTO exptrack.expenses (title, category, amount, date, description)
          VALUES (:title, :category, :amount, :date, :description)
          RETURNING id'
     );
@@ -38,9 +38,5 @@ try {
 
     jsonResponse(['message' => 'Expense added successfully.', 'id' => $newId], 201);
 } catch (PDOException $e) {
-    jsonResponse([
-        'error' => 'Failed to add expense.',
-        'details' => $e->getMessage(),
-        'hint' => 'Check DB_NAME and DB_SCHEMA environment variables (schema should be exptrack).',
-    ], 500);
+    jsonResponse(['error' => 'Failed to add expense.', 'details' => $e->getMessage()], 500);
 }
