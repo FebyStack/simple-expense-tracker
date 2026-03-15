@@ -6,13 +6,27 @@
     <meta name="description" content="Create an Expense Tracker account to start managing your expenses.">
     <title>Register — Expense Tracker</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="auth-body">
 
+<!-- Dynamic Animated Background -->
+<div class="bg-animation">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+</div>
+
+<!-- Cursor glow div (tracked via JS) -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
 <div class="auth-container">
 
-    <div class="auth-card">
+    <div class="auth-card glass-panel">
 
         <div class="auth-header">
             <h1 class="auth-title">Expense Tracker</h1>

@@ -6,9 +6,20 @@
     <meta name="description" content="View your expense dashboard, track spending, and manage your budget.">
     <title>Dashboard — Expense Tracker</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="app-body">
+
+<!-- Dynamic Animated Background -->
+<div class="bg-animation">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+</div>
 
 <nav class="navbar" id="navbar">
     <div class="navbar-inner">
@@ -24,21 +35,21 @@
 
     <!-- Summary Cards -->
     <section class="summary-section" id="summarySection">
-        <div class="summary-card card-total">
+        <div class="summary-card glass-panel card-total">
             <div class="summary-icon">💰</div>
             <div class="summary-info">
                 <h2 class="summary-label">Total Expenses</h2>
                 <p class="summary-amount" id="totalAmount">₱0.00</p>
             </div>
         </div>
-        <div class="summary-card card-count">
+        <div class="summary-card glass-panel card-count">
             <div class="summary-icon">📋</div>
             <div class="summary-info">
                 <h2 class="summary-label">Number of Expenses</h2>
                 <p class="summary-amount" id="expenseCount">0</p>
             </div>
         </div>
-        <div class="summary-card card-highest">
+        <div class="summary-card glass-panel card-highest">
             <div class="summary-icon">📈</div>
             <div class="summary-info">
                 <h2 class="summary-label">Highest Expense</h2>
@@ -49,13 +60,13 @@
 
     <!-- Category Breakdown -->
     <section class="stats-section">
-        <div class="stats-card">
+        <div class="stats-card glass-panel">
             <h2 class="section-title">Spending by Category</h2>
             <div id="categoryStats" class="category-list">
                 <p class="text-muted">No data yet.</p>
             </div>
         </div>
-        <div class="stats-card">
+        <div class="stats-card glass-panel">
             <h2 class="section-title">Monthly Totals</h2>
             <div id="monthlyStats" class="monthly-list">
                 <p class="text-muted">No data yet.</p>
@@ -65,7 +76,7 @@
 
     <!-- Filters & Search -->
     <section class="filter-section">
-        <div class="filter-bar" id="filterBar">
+        <div class="filter-bar glass-panel" id="filterBar">
             <input type="text" id="filterSearch" class="form-input filter-input" placeholder="Search title or category...">
 
             <select id="filterCategory" class="form-input filter-select">
@@ -87,10 +98,11 @@
     <section class="expenses-section">
         <div class="expenses-header">
             <h2 class="section-title">All Expenses</h2>
+            <!-- Button hidden on mobile in CSS, FAB used instead -->
             <a href="add-expense.html" class="btn btn-primary add-expense-btn">+ Add Expense</a>
         </div>
 
-        <div class="table-wrapper">
+        <div class="table-wrapper glass-panel">
             <table class="expense-table" id="expenseTable">
                 <thead class="table-header">
                     <tr class="table-row header-row">
@@ -109,6 +121,9 @@
     </section>
 
 </div>
+
+<!-- Floating Action Button for Mobile / Accent -->
+<a href="add-expense.html" class="fab-button" aria-label="Add Expense">+</a>
 
 <script src="js/app.js"></script>
 

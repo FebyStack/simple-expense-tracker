@@ -6,9 +6,20 @@
     <meta name="description" content="Edit an existing expense in your Expense Tracker.">
     <title>Edit Expense — Expense Tracker</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="app-body">
+
+<!-- Dynamic Animated Background -->
+<div class="bg-animation">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+</div>
 
 <nav class="navbar" id="navbar">
     <div class="navbar-inner">
@@ -28,7 +39,7 @@
 
     <div id="formError" class="alert alert-danger" style="display:none;"></div>
 
-    <form class="expense-form" id="editExpenseForm" novalidate>
+    <form class="expense-form glass-panel-solid" id="editExpenseForm" novalidate>
         <input type="hidden" name="id">
         <input type="hidden" name="csrf_token" id="csrfToken">
 

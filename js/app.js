@@ -134,10 +134,29 @@ function bindLogout() {
 }
 
 // ============================================================
+// Cursor Tracking (Auth Pages)
+// ============================================================
+
+function initCursorTracking() {
+    const glow = document.getElementById('cursorGlow');
+    if (!glow) return;
+
+    document.addEventListener('mousemove', (e) => {
+        // Use requestAnimationFrame for smoother performance
+        requestAnimationFrame(() => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+    });
+}
+
+// ============================================================
 // Login Page
 // ============================================================
 
 function initLoginPage() {
+    initCursorTracking();
+
     const form = document.getElementById('loginForm');
     if (!form) return;
 
@@ -182,6 +201,8 @@ function initLoginPage() {
 // ============================================================
 
 function initRegisterPage() {
+    initCursorTracking();
+
     const form = document.getElementById('registerForm');
     if (!form) return;
 
