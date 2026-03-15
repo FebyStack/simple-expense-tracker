@@ -1,36 +1,65 @@
 <?php
+/**
+ * POST /api/add_expense.php
+ *
+ * Body: title, category, amount, date, description, csrf_token
+ * Requires: logged-in user
+ */
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/auth_check.php';   // sets $currentUserId
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(['error' => 'Method not allowed'], 405);
 }
 
-$title = trim($_POST['title'] ?? '');
-$category = trim($_POST['category'] ?? '');
-$amount = (float) ($_POST['amount'] ?? 0);
-$date = trim($_POST['date'] ?? '');
+validateCsrfToken();
+
+// ---------------------------------------------------------------------------
+// Collect & validate input
+// ---------------------------------------------------------------------------
+$title       = trim($_POST['title'] ?? '');
+$category    = trim($_POST['category'] ?? '');
+$amount      = $_POST['amount'] ?? '';
+$date        = trim($_POST['date'] ?? '');
 $description = trim($_POST['description'] ?? '');
 
-if ($title === '' || $amount <= 0 || $date === '') {
-    jsonResponse(['error' => 'Title, amount, and date are required.'], 422);
+$errors = [];
+
+if ($title === '') {
+    $errors[] = 'Title is required.';
+}
+if (!is_numeric($amount) || (float) $amount <= 0) {
+    $errors[] = 'Amount must be a positive number.';
+}
+if ($date === '' || !strtotime($date)) {
+    $errors[] = 'A valid date is required.';
 }
 
+if ($errors) {
+    jsonResponse(['error' => implode(' ', $errors)], 422);
+}
+
+$amount = (float) $amount;
+
+// ---------------------------------------------------------------------------
+// Insert
+// ---------------------------------------------------------------------------
 try {
-    $pdo = Database::connect();
+    $pdo  = Database::connect();
     $stmt = $pdo->prepare(
-        'INSERT INTO exptrack.expenses (title, category, amount, date, description)
-         VALUES (:title, :category, :amount, :date, :description)
+        'INSERT INTO exptrack.expenses (user_id, title, category, amount, expense_date, description)
+         VALUES (:user_id, :title, :category, :amount, :date, :description)
          RETURNING id'
     );
 
     $stmt->execute([
-        ':title' => $title,
-        ':category' => $category,
-        ':amount' => $amount,
-        ':date' => $date,
+        ':user_id'     => $currentUserId,
+        ':title'       => $title,
+        ':category'    => $category,
+        ':amount'      => $amount,
+        ':date'        => $date,
         ':description' => $description,
     ]);
 
@@ -38,5 +67,6 @@ try {
 
     jsonResponse(['message' => 'Expense added successfully.', 'id' => $newId], 201);
 } catch (PDOException $e) {
-    jsonResponse(['error' => 'Failed to add expense.', 'details' => $e->getMessage()], 500);
+    error_log('Add expense error: ' . $e->getMessage());
+    jsonResponse(['error' => 'Failed to add expense.'], 500);
 }

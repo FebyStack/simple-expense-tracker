@@ -1,55 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body class="app-body">
-
-<div class="container">
-
-    <header class="app-header">
-        <h1 class="app-title">Expense Tracker</h1>
-        <a href="add-expense.html" class="btn btn-primary add-expense-btn">
-            Add Expense
-        </a>
-    </header>
-
-    <section class="summary-section">
-        <div class="summary-card total-expenses-card">
-            <h2 class="summary-title">Total Expenses</h2>
-            <p class="summary-amount" id="totalExpenses">₱0</p>
-        </div>
-    </section>
-
-    <section class="expenses-section">
-
-        <h2 class="section-title">All Expenses</h2>
-
-        <table class="expense-table" id="expenseTable">
-
-            <thead class="table-header">
-                <tr class="table-row header-row">
-                    <th class="table-heading">Title</th>
-                    <th class="table-heading">Category</th>
-                    <th class="table-heading">Amount</th>
-                    <th class="table-heading">Date</th>
-                    <th class="table-heading">Actions</th>
-                </tr>
-            </thead>
-
-            <tbody class="table-body">
-
-            </tbody>
-
-        </table>
-
-    </section>
-
-</div>
-
-<script src="js/app.js"></script>
-
+    <!-- Redirect page: JS sends user to login or dashboard -->
+    <div class="auth-container">
+        <p class="text-muted">Redirecting...</p>
+    </div>
+    <script src="js/app.js"></script>
 </body>
 </html>
