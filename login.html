@@ -6,7 +6,6 @@
     <meta name="description" content="Login to your Expense Tracker account to manage your finances.">
     <title>Login — Expense Tracker</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- Google Fonts for Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,12 +13,15 @@
 
 <body class="auth-body">
 
-<!-- Cursor glow div (tracked via JS) -->
+<!-- Particle background canvas -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- Cursor glow -->
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <div class="auth-container">
 
-    <div class="auth-card card">
+    <div class="auth-card glass">
 
         <div class="auth-header">
             <h1 class="auth-title">Expense Tracker</h1>
@@ -28,29 +30,27 @@
 
         <div id="authError" class="alert alert-danger" style="display:none;"></div>
 
-        <form id="loginForm" class="auth-form" novalidate>
+        <form class="auth-form" id="loginForm" novalidate>
             <input type="hidden" name="csrf_token" id="csrfToken">
 
             <div class="form-group">
-                <label class="form-label" for="loginEmail">Email Address</label>
+                <label class="form-label" for="loginEmail">Email</label>
                 <input type="email" name="email" id="loginEmail" class="form-input" placeholder="you@example.com" required>
                 <span class="form-error" id="emailError"></span>
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="loginPassword">Password</label>
-                <input type="password" name="password" id="loginPassword" class="form-input" placeholder="Enter your password" required>
+                <input type="password" name="password" id="loginPassword" class="form-input" placeholder="Your password" required>
                 <span class="form-error" id="passwordError"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
-                Sign In
-            </button>
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
         </form>
 
-        <p class="auth-footer">
-            Don't have an account? <a href="register.html" class="auth-link">Create one</a>
-        </p>
+        <div class="auth-footer">
+            Don't have an account? <a class="auth-link" href="register.html">Create one</a>
+        </div>
 
     </div>
 

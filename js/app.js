@@ -134,6 +134,175 @@ function bindLogout() {
 }
 
 // ============================================================
+// Particle Animation System
+// ============================================================
+
+const ParticleSystem = (() => {
+    let canvas, ctx, particles = [], mouse = { x: -500, y: -500 }, animId;
+    const PARTICLE_COUNT = 65;
+    const CONNECTION_DIST = 130;
+    const MOUSE_RADIUS = 160;
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * (canvas ? canvas.width : window.innerWidth);
+            this.y = Math.random() * (canvas ? canvas.height : window.innerHeight);
+            this.size = Math.random() * 2.2 + 0.6;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.opacity = Math.random() * 0.5 + 0.3;
+        }
+        update(w, h) {
+            // Mouse repulsion
+            const dx = this.x - mouse.x;
+            const dy = this.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MOUSE_RADIUS && dist > 0) {
+                const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS * 0.8;
+                this.x += (dx / dist) * force;
+                this.y += (dy / dist) * force;
+            }
+
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x < 0 || this.x > w) this.speedX *= -1;
+            if (this.y < 0 || this.y > h) this.speedY *= -1;
+
+            // Keep in bounds
+            this.x = Math.max(0, Math.min(w, this.x));
+            this.y = Math.max(0, Math.min(h, this.y));
+        }
+        draw(ctx, r, g, b) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r},${g},${b},${this.opacity})`;
+            ctx.fill();
+        }
+    }
+
+    function getColors() {
+        const style = getComputedStyle(document.documentElement);
+        return {
+            r: parseInt(style.getPropertyValue('--particle-r')) || 255,
+            g: parseInt(style.getPropertyValue('--particle-g')) || 215,
+            b: parseInt(style.getPropertyValue('--particle-b')) || 0
+        };
+    }
+
+    function animate() {
+        if (!canvas || !ctx) return;
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        const { r, g, b } = getColors();
+
+        // Update & draw particles
+        particles.forEach(p => {
+            p.update(w, h);
+            p.draw(ctx, r, g, b);
+        });
+
+        // Draw connection lines
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < CONNECTION_DIST) {
+                    const opacity = (1 - dist / CONNECTION_DIST) * 0.15;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(${r},${g},${b},${opacity})`;
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Draw mouse connections
+        particles.forEach(p => {
+            const dx = p.x - mouse.x;
+            const dy = p.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MOUSE_RADIUS) {
+                const opacity = (1 - dist / MOUSE_RADIUS) * 0.25;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.strokeStyle = `rgba(${r},${g},${b},${opacity})`;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+            }
+        });
+
+        animId = requestAnimationFrame(animate);
+    }
+
+    function resize() {
+        if (!canvas) return;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    function init() {
+        canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        ctx = canvas.getContext('2d');
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Track mouse — pointer-events:none on canvas, so listen on document
+        document.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        document.addEventListener('mouseleave', () => {
+            mouse.x = -500;
+            mouse.y = -500;
+        });
+
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(new Particle());
+        }
+
+        animate();
+    }
+
+    return { init };
+})();
+
+// ============================================================
+// Dark Mode Toggle
+// ============================================================
+
+function initDarkModeToggle() {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+
+    // Restore saved preference
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark-alt') {
+        document.body.classList.add('dark-alt');
+        btn.textContent = '☀';
+    }
+
+    btn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-alt');
+        const isDark = document.body.classList.contains('dark-alt');
+        btn.textContent = isDark ? '☀' : '☽';
+        localStorage.setItem('theme', isDark ? 'dark-alt' : 'default');
+    });
+}
+
+// ============================================================
 // Cursor Tracking (Auth Pages)
 // ============================================================
 
@@ -142,7 +311,6 @@ function initCursorTracking() {
     if (!glow) return;
 
     document.addEventListener('mousemove', (e) => {
-        // Use requestAnimationFrame for smoother performance
         requestAnimationFrame(() => {
             glow.style.left = e.clientX + 'px';
             glow.style.top = e.clientY + 'px';
@@ -155,6 +323,7 @@ function initCursorTracking() {
 // ============================================================
 
 function initLoginPage() {
+    ParticleSystem.init();
     initCursorTracking();
 
     const form = document.getElementById('loginForm');
@@ -201,6 +370,7 @@ function initLoginPage() {
 // ============================================================
 
 function initRegisterPage() {
+    ParticleSystem.init();
     initCursorTracking();
 
     const form = document.getElementById('registerForm');
@@ -467,6 +637,8 @@ async function initDashboard() {
     const session = await requireAuth();
     if (!session) return;
 
+    ParticleSystem.init();
+    initDarkModeToggle();
     bindLogout();
     await loadSummary();
     await loadExpenses();
@@ -481,6 +653,7 @@ async function initDashboard() {
 async function initAddExpense() {
     const session = await requireAuth();
     if (!session) return;
+    ParticleSystem.init();
     bindLogout();
 
     const form = document.getElementById('expenseForm');
@@ -537,6 +710,7 @@ async function initAddExpense() {
 async function initEditExpense() {
     const session = await requireAuth();
     if (!session) return;
+    ParticleSystem.init();
     bindLogout();
 
     const form = document.getElementById('editExpenseForm');
