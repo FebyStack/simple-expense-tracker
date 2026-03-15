@@ -14,13 +14,6 @@
 
 <body class="app-body">
 
-<!-- Dynamic Animated Background -->
-<div class="bg-animation">
-    <div class="bg-shape bg-shape-1"></div>
-    <div class="bg-shape bg-shape-2"></div>
-    <div class="bg-shape bg-shape-3"></div>
-</div>
-
 <nav class="navbar" id="navbar">
     <div class="navbar-inner">
         <a href="dashboard.html" class="navbar-brand">Expense Tracker</a>
@@ -33,13 +26,15 @@
 
 <div class="container">
 
+    <div class="form-page-wrapper">
+
     <header class="page-header">
         <h1 class="page-title">Add Expense</h1>
     </header>
 
     <div id="formError" class="alert alert-danger" style="display:none;"></div>
 
-    <form class="expense-form glass-panel-solid" id="expenseForm" novalidate>
+    <form class="expense-form card form-card" id="expenseForm" novalidate>
         <input type="hidden" name="csrf_token" id="csrfToken">
 
         <div class="form-group">
@@ -91,6 +86,8 @@
         </div>
 
     </form>
+
+    </div> <!-- /.form-page-wrapper -->
 
 </div>
 

@@ -14,13 +14,6 @@
 
 <body class="app-body">
 
-<!-- Dynamic Animated Background -->
-<div class="bg-animation">
-    <div class="bg-shape bg-shape-1"></div>
-    <div class="bg-shape bg-shape-2"></div>
-    <div class="bg-shape bg-shape-3"></div>
-</div>
-
 <nav class="navbar" id="navbar">
     <div class="navbar-inner">
         <a href="dashboard.html" class="navbar-brand">Expense Tracker</a>
@@ -35,22 +28,22 @@
 
     <!-- Summary Cards -->
     <section class="summary-section" id="summarySection">
-        <div class="summary-card glass-panel card-total">
-            <div class="summary-icon">💰</div>
+        <div class="summary-card card card-total">
+            <div class="summary-icon">₱</div>
             <div class="summary-info">
                 <h2 class="summary-label">Total Expenses</h2>
                 <p class="summary-amount" id="totalAmount">₱0.00</p>
             </div>
         </div>
-        <div class="summary-card glass-panel card-count">
-            <div class="summary-icon">📋</div>
+        <div class="summary-card card card-count">
+            <div class="summary-icon">#</div>
             <div class="summary-info">
-                <h2 class="summary-label">Number of Expenses</h2>
+                <h2 class="summary-label">Total Transactions</h2>
                 <p class="summary-amount" id="expenseCount">0</p>
             </div>
         </div>
-        <div class="summary-card glass-panel card-highest">
-            <div class="summary-icon">📈</div>
+        <div class="summary-card card card-highest">
+            <div class="summary-icon">↑</div>
             <div class="summary-info">
                 <h2 class="summary-label">Highest Expense</h2>
                 <p class="summary-amount" id="highestExpense">₱0.00</p>
@@ -60,13 +53,13 @@
 
     <!-- Category Breakdown -->
     <section class="stats-section">
-        <div class="stats-card glass-panel">
+        <div class="stats-card card">
             <h2 class="section-title">Spending by Category</h2>
             <div id="categoryStats" class="category-list">
                 <p class="text-muted">No data yet.</p>
             </div>
         </div>
-        <div class="stats-card glass-panel">
+        <div class="stats-card card">
             <h2 class="section-title">Monthly Totals</h2>
             <div id="monthlyStats" class="monthly-list">
                 <p class="text-muted">No data yet.</p>
@@ -76,7 +69,7 @@
 
     <!-- Filters & Search -->
     <section class="filter-section">
-        <div class="filter-bar glass-panel" id="filterBar">
+        <div class="filter-bar card" id="filterBar">
             <input type="text" id="filterSearch" class="form-input filter-input" placeholder="Search title or category...">
 
             <select id="filterCategory" class="form-input filter-select">
@@ -102,7 +95,7 @@
             <a href="add-expense.html" class="btn btn-primary add-expense-btn">+ Add Expense</a>
         </div>
 
-        <div class="table-wrapper glass-panel">
+        <div class="table-wrapper card">
             <table class="expense-table" id="expenseTable">
                 <thead class="table-header">
                     <tr class="table-row header-row">
