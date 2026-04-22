@@ -30,9 +30,9 @@ class Database
 
         $host = getenv('DB_HOST') ?: 'localhost';
         $port = getenv('DB_PORT') ?: '5432';
-        $dbname = getenv('DB_NAME') ?: 'Expense-Tracker';
+        $dbname = getenv('DB_NAME') ?: 'SExpense_Tracker';
         $user = getenv('DB_USER') ?: 'postgres';
-        $password = getenv('DB_PASSWORD') ?: 'bingbong321';
+        $password = getenv('DB_PASSWORD') ?: 'Bingbong321';
 
         $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s', $host, $port, $dbname);
 
